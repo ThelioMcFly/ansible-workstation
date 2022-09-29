@@ -1,0 +1,8 @@
+---
+
+- name: Include OS specific vars
+  include_vars: "{{ ansible_facts['distribution'] }}.yml"
+
+- name: "Include {{ ansible_facts['distribution'] }} install tasks"
+  include_tasks: "{{ ansible_facts['distribution'] }}/install.yml"
+

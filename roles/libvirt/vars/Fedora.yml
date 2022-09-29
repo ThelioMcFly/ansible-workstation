@@ -1,0 +1,44 @@
+---
+libvirt_required_packages: 
+  - libvirt
+  - libvirt-daemon
+  - libvirt-client
+  - libvirt-devel
+  - virt-install
+  - virt-manager
+  - qemu-kvm
+  - bridge-utils
+  - libguestfs-tools
+  - guestfs-tools
+  - virt-top
+libvirt_service: "libvirtd.service"
+libvirt_use_legacy: false
+libvirt_legacy_services:
+  - libvirtd.service
+  - libvirtd.socket
+  - libvirtd-ro.socket
+  - libvirtd-admin.socket
+  - libvirtd-tcp.socket
+  - libvirtd-tls.socket
+libvirt_required_services:
+  - virtqemud.socket
+  - virtqemud-ro.socket
+  - virtqemud-admin.socket
+  - virtinterfaced.socket
+  - virtinterfaced-ro.socket
+  - virtinterfaced-admin.socket
+  - virtnetworkd.socket
+  - virtnetworkd-ro.socket
+  - virtnetworkd-admin.socket
+  - virtnodedevd.socket
+  - virtnodedevd-ro.socket
+  - virtnodedevd-admin.socket
+  - virtnwfilterd.socket
+  - virtnwfilterd-ro.socket
+  - virtnwfilterd-admin.socket
+  - virtsecretd.socket
+  - virtsecretd-ro.socket
+  - virtsecretd-admin.socket
+  - virtstoraged.socket
+  - virtstoraged-ro.socket
+  - virtstoraged-admin.socket

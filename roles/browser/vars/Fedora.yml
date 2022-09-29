@@ -1,0 +1,9 @@
+---
+browser_install_brave: true
+brave_repo_name: brave-browser
+brave_repo_description: brave-browser
+brave_repo_url: https://brave-browser-rpm-release.s3.brave.com/x86_64/
+brave_repo_enabled: true
+brave_repo_gpgkey: https://brave-browser-rpm-release.s3.brave.com/brave-core.asc
+brave_package_list:
+  - brave-browser

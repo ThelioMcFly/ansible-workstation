@@ -1,0 +1,7 @@
+---
+
+- name: "Snap: Include {{ host_os }} "
+  include_vars: "{{ host_os }}.yml"
+
+- name: "Snap: Install snap on {{ host_os }}"
+  include_tasks: "{{ host_os }}.yml"

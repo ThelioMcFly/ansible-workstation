@@ -1,0 +1,2 @@
+snap_required_packages:
+  - snapd

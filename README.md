@@ -1,3 +1,1 @@
-# Ansible Collection - ThelioMcFly.workstation
-
-Documentation for the collection.
+# TODO: MAKE A REAL README.md

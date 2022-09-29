@@ -1,0 +1,17 @@
+---
+
+- name: Install Web Broswers
+  become: true
+  block:
+    - name: Install Brave Browser repo
+      ansible.builtin.yum_repository:
+        name: "{{ brave_repo_name }}"
+        description: "{{ brave_repo_description }}"
+        baseurl: "{{ brave_repo_url }}"
+        enabled: "{{ brave_repo_enabled | default('true') }}"
+        gpgkey: "{{ brave_repo_gpgkey }}"
+
+- name: Install Brave Browser
+  ansible.builtin.package:
+    name: "{{ brave_package_list }}"
+    state: present

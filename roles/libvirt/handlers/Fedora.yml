@@ -1,0 +1,51 @@
+---
+
+- name: configuring modular libvirt
+  when: not libvirt_use_legacy
+  block:
+    - name: Stop legacy libvrtd daemon
+      become: true
+      ansible.builtin.systemd:
+        name: "{{ item }}"
+        state: stopped
+        enabled: no  
+        masked: yes
+      with_items: "{{ libvirt_legacy_services }}"
+
+    # ensure modular daemons and sockets are started
+    - name: Enable modular libvirt daemons and sockets
+      become: true
+      ansible.builtin.systemd:
+        name: "{{ item }}"
+        state: restarted
+        enabled: yes
+        masked: no
+      with_items: "{{ libvirt_required_services }}"
+
+
+
+
+- name: Configuring legacy libvirt
+  when: libvirt_use_legacy
+  block:
+    # ensure legacy daemons ans sockets are started if we are using legacy mode
+    - name: Start legacy libvrtd daemon
+      become: true
+      ansible.builtin.systemd:
+        name: "{{ item }}"
+        state: restarted
+        enabled: yes
+        masked: no
+      with_items: "{{ libvirt_legacy_services }}"
+
+    # ensure modular daemons and sockets are stopped
+    - name: Disable modular libvirt daemons and sockets
+      become: true
+      ansible.builtin.systemd:
+        name: "{{ item }}"
+        state: restarted
+        enabled: yes
+        masked: no
+      with_items: "{{ required_libvirt_services }}"
+
+  

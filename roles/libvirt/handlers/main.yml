@@ -1,0 +1,4 @@
+---
+
+- name: "Restart services"
+  include_tasks: "{{ ansible_facts['distribution'] }}.yml"

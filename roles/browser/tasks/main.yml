@@ -1,0 +1,8 @@
+---
+
+- name: "Include {{ ansible_facts['distribution'] }} variables"
+  include_vars: "{{ ansible_facts['distribution'] }}.yml"
+
+- name: Install brave browser
+  when: browser_install_brave
+  include_tasks: "{{ ansible_facts['distribution'] }}/brave/install.yml"

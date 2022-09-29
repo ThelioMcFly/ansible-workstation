@@ -1,0 +1,36 @@
+---
+
+#- name: Include OS specific vars
+#  include_vars: "{{ ansible_facts['distribution'] }}.yml"
+
+- name: Install Vagrant
+  become: true
+  block:
+  - name: Install Hashicorp repository
+    ansible.builtin.command:
+      cmd: "dnf config-manager --add {{vagrant_repo_remote_config}}"
+      creates: /etc/yum.repos.d/hashicorp.repo
+    when: use_hashicorp_repo 
+    
+  - name: Install Custom Vagrant repository
+    ansible.builtin.yum_repository:
+      name:         "{{ custom_vagrant_repo.name | mandatory }}"
+      description:  "{{ custom_vagrant_repo.description | default(omit) }}"
+      baseurl:      "{{ custom_vagrant_repo.baseurl | mandatory }}"
+      enabled:      "{{ custom_vagrant_repo.enabled | default(true) }}"
+      gpgcheck:     "{{ custom_vagrant_repo.gpgcheck | default(omit) }}"
+      gpgcakey:     "{{ custom_vagrant_repo.gpgcakey | default(omit) }}"
+    when: not use_hashicorp_repo
+      
+    
+
+- name: Setup Vagrant as needed
+  become: true
+  block:
+  - name: Install Vagrant
+    ansible.builtin.package:
+      name: "{{ item.pkg_name }}"
+      disable_gpg_check: "{{ item.disable_gpg_check | default(omit) }}"
+      state: present
+    with_items: "{{ vagrant_required_packages }}"
+  

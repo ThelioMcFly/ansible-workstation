@@ -1,0 +1,8 @@
+---
+
+- name: "Snap: Installing snap on {{ host_os }} "
+  block:
+    - name: "Snap: Using {{ ansible_facts['pkg_mgr'] }}"
+      ansible.builtin.package:
+        name: "{{ snap_required_packages }}"
+        state: present

@@ -1,0 +1,10 @@
+---
+
+- name: Install required flatpak apps
+  become: "{{ 'yes' if item.method is defined and item.method == 'system' else 'no' }}"
+  community.general.flatpak:
+    name: "{{ item.name }}"
+    state: "{{ item.state | default('present') }}"
+    method: "{{ item.method | default('user') }}"
+    remote: "{{ item.remote | default('flathub') }}"
+  with_items: "{{ flatpak_required_apps }}"

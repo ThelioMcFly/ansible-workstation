@@ -1,0 +1,9 @@
+---
+
+- name: Install libvirtd daemon
+  become: true
+  ansible.builtin.package:
+    name: "{{ libvirt_required_packages }}"
+    state: present
+  notify: 
+    - "Restart services"
