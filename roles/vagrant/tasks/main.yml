@@ -1,7 +1,7 @@
 ---
 
-#- name: Include OS specific vars
-#  include_vars: "{{ ansible_facts['distribution'] }}.yml"
+- name: Include OS specific vars
+  include_vars: "{{ ansible_facts['distribution'] }}.yml"
 
 - name: Install Vagrant
   become: true

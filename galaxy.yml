@@ -1,5 +1,5 @@
 namespace: theliomcfly
-name: ansible_workstation
+name: workstation
 version: 0.1.0
 readme: README.md
 authors:

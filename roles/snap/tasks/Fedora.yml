@@ -1,8 +1,25 @@
 ---
 
-- name: "Snap: Installing snap on {{ host_os }} "
+- name: "Snap: Include {{ ansible_facts['distribution'] }} vars"
+  include_vars: "{{ ansible_facts['distribution'] }}.yml"
+
+- name: "Snap: Installing snapd on {{ ansible_facts['distribution'] }}"
+  become: true
   block:
     - name: "Snap: Using {{ ansible_facts['pkg_mgr'] }}"
       ansible.builtin.package:
         name: "{{ snap_required_packages }}"
         state: present
+
+    - name: "Snap: Ensure snapd is running"
+      ansible.builtin.service:
+        name: snapd
+        state: started
+
+- name: "Snap: Installing snaps"
+  become: true
+  block:
+    - name: "Snap: Installing listed snaps"
+      community.general.snap:
+        name: "{{ snap_install_list }}"
+      when: snap_install_list is defined
