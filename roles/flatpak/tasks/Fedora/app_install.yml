@@ -8,3 +8,4 @@
     method: "{{ item.method | default('user') }}"
     remote: "{{ item.remote | default('flathub') }}"
   with_items: "{{ flatpak_required_apps }}"
+  when: flatpak_required_apps is defined
