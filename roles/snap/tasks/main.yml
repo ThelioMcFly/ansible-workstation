@@ -1,4 +1,4 @@
 ---
 
-- name: "Snap: Install snap on {{ host_os }}"
+- name: "Snap: Install snap on {{ ansible_facts['distribution'] }}"
   include_tasks: "{{ ansible_facts['distribution'] }}.yml"
