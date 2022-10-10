@@ -18,3 +18,15 @@ This role will install the perferred browser. All ```brave_repo_*``` variables m
 **```brave_repo_gpgkey```** (string): Default => ```https://brave-browser-rpm-release.s3.brave.com/brave-core.asc```
 
 **```brave_package_list```** (list): Default => ```['brave-browser']```
+
+
+# Example playbook usage
+```
+- name: Setup required environment
+  hosts: all
+    
+  roles:
+  - role: theliomcfly.workstation.browser
+      tags: browser
+      become: true
+```
