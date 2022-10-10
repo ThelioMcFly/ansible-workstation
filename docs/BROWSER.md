@@ -1,4 +1,4 @@
-# theliomcfly.workstation.browser
+# Role: theliomcfly.workstation.browser
 
 # Description:
 This role will install the perferred browser. All ```brave_repo_*``` variables mirror the ```ansible.builtin.yum_repository``` module.
