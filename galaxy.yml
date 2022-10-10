@@ -1,6 +1,6 @@
 namespace: theliomcfly
 name: workstation
-version: 0.1.0
+version: 0.2.0
 readme: README.md
 authors:
 - ThelioMcFly
@@ -10,7 +10,9 @@ tags:
   - ThelioMcFly
   - Workstation
 
-dependencies: {}
+dependencies: 
+  "community.general": ">=4.4.0"
+  
 repository: https://github.com/ThelioMcFly/ansible-workstation
 documentation: https://github.com/ThelioMcFly/ansible-workstation/blob/main/README.md
 homepage: https://github.com/ThelioMcFly/ansible-workstation
