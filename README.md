@@ -35,3 +35,4 @@ ansible-galaxy collection install theliomcfly.workstation
 
 - [Browser](docs/BROWSER.md) - This role will install browsers on the workstation
 - [Flatpak](docs/FLATPAK.md) - This role will ensure flatpak is installed, configure the flathub repo, and install the specified flatpaks.
+- [gnome_settings](docs/GNOME_SETTINGS.md) - This role will edit the dconf settings in Gnome as specified by the play.
