@@ -1,4 +1,4 @@
-# Role: theliomcfly.workstation.snap
+# Role: theliomcfly.workstation.terraform
 
 # Requirements
 
