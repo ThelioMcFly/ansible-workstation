@@ -1,13 +1,7 @@
 ---
-vagrant_required_packages: 
-  - pkg_name: vagrant
-    disable_gpg_check: true
-  - pkg_name: vagrant-libvirt
-    disable_gpg_check: true
-use_hashicorp_repo: true
-use_hashicorp_repo_remote_config: true
-vagrant_repo_remote_config: https://rpm.releases.hashicorp.com/fedora/hashicorp.repo
-custom_vagrant_repo: 
-  name: custom_vagrant_repo
-  description: custom_vagrant_repo description
-  baseurl: https://rpm.releases.hashicorp.com/fedora/$releasever/$basearch/stable
+vargrant_required_packages: 
+  - vagrant
+  - vagrant-libvirt
+
+libssh_package: libssh
+krb5libs_package: krb5-libs
