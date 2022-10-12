@@ -1,4 +1,4 @@
-# Role: theliomcfly.workstation.gnome_settings
+# Role: theliomcfly.workstation.libvirt
 
 # Description
 
