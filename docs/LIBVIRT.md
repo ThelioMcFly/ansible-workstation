@@ -1,4 +1,4 @@
-# Role: theliomcfly.workstation.gnome_settings
+# Role: theliomcfly.workstation.libvirt
 
 # Description
 
@@ -59,3 +59,13 @@ virtstoraged.socket
 virtstoraged-ro.socket
 virtstoraged-admin.socket
 ```
+
+# Example playbook usage
+```
+- name: Setup required environment
+  hosts: all
+    
+  roles:
+    - role: theliomcfly.workstation.libvirt
+      tags: libvirt
+      become: true

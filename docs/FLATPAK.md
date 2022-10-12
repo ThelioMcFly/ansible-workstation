@@ -19,3 +19,22 @@ The dictionaries ```flatpak_required_apps``` expect have the keys as follows:
 - **```state```** (string): Either ```present``` (default) or ```absent```
 - **```method```** (string): Either ```user``` (default) or ```system```
 - **```remote```** (string): The name of the flatpak repository to use - Default => ```unfiltered-flathub``` (created by this role)
+
+# Example playbook usage
+```
+- name: Setup required environment
+  hosts: all
+    
+  roles:
+  - role: theliomcfly.workstation.flatpak
+      tags: flatpak
+      become: true
+      flatpak_required_apps:
+        - name: com.valvesoftware.Steam
+        - name: us.zoom.Zoom
+        - name: net.cozic.joplin_desk
+        - name: com.visualstudio.code
+        - name: com.github.tchx84.Flatseal
+        - name: org.gnome.Extensions
+        - name: org.zealdocs.Zeal
+```

@@ -34,3 +34,28 @@ sudo dnf install python3-psutil
 
 **```state```** (string): Whether the string should be ```present``` or ```absent```
 
+# Example playbook usage
+```
+- name: Setup required environment
+  hosts: all
+    
+  roles:
+  - role: theliomcfly.workstation.gnome_settings
+      tags: gnome
+      config:
+        - dconf_user: root
+          dconf_settings:
+            key: "/org/gnome/desktop/interface/color-scheme"
+            value: "prefer-light"
+            state: present    
+        - dconf_settings:
+            key: "/org/gnome/desktop/interface/color-scheme"
+            value: "prefer-dark"
+            state: present
+        - dconf_user: vagrant
+          dconf_settings:
+            key: "/org/gnome/desktop/interface/gtk-theme"
+            value: "Adwaita-dark"
+            state: present
+```
+
