@@ -3,34 +3,65 @@
 - name: Include OS specific vars
   include_vars: "{{ ansible_facts['distribution'] }}.yml"
 
-- name: Install Vagrant
-  become: true
-  block:
-  - name: Install Hashicorp repository
-    ansible.builtin.command:
-      cmd: "dnf config-manager --add {{vagrant_repo_remote_config}}"
-      creates: /etc/yum.repos.d/hashicorp.repo
-    when: use_hashicorp_repo 
-    
-  - name: Install Custom Vagrant repository
-    ansible.builtin.yum_repository:
-      name:         "{{ custom_vagrant_repo.name | mandatory }}"
-      description:  "{{ custom_vagrant_repo.description | default(omit) }}"
-      baseurl:      "{{ custom_vagrant_repo.baseurl | mandatory }}"
-      enabled:      "{{ custom_vagrant_repo.enabled | default(true) }}"
-      gpgcheck:     "{{ custom_vagrant_repo.gpgcheck | default(omit) }}"
-      gpgcakey:     "{{ custom_vagrant_repo.gpgcakey | default(omit) }}"
-    when: not use_hashicorp_repo
-      
-    
-
-- name: Setup Vagrant as needed
+- name: Install Vagrant 
   become: true
   block:
   - name: Install Vagrant
     ansible.builtin.package:
-      name: "{{ item.pkg_name }}"
-      disable_gpg_check: "{{ item.disable_gpg_check | default(omit) }}"
+      name: "{{ vargrant_required_packages }}"
       state: present
-    with_items: "{{ vagrant_required_packages }}"
   
+- name: Ensure libssh and krb5 libs are installed
+  block:
+  - name: Gather package facts
+    ansible.builtin.package_facts:
+      manager: auto
+
+  - name: Ensure libssh is installed
+    ansible.builtin.dnf:
+      name: "{{ ansible_facts.packages[libssh_package] }}"
+      state: installed
+    when: not ansible_facts.packages[libssh_package]
+
+  - name: Ensure krb5 libs are installed
+    ansible.builtin.dnf:
+      name: "{{ ansible_facts.packages[krb5libs_package] }}"
+      state: installed
+    when: not ansible_facts.packages[krb5libs_package]
+
+- name: Copy libssh and krb5-libs .so files 
+  become: true
+  block:
+  - name: Find - Find libssh .so files
+    register: findlibssh
+    ansible.builtin.find:
+      file_type: any
+      paths:
+        - /usr/lib64
+      patterns:
+        - 'libssh*so*'
+
+  - name: Copy libssh into embeded dir
+    ansible.builtin.copy:
+      dest: /opt/vagrant/embedded/lib64/
+      remote_src: true
+      src: "{{ item['path'] }}"
+    with_items: "{{ findlibssh['files'] }}"
+
+  - name: Find - Find libk5crypto .so files
+    register: findkrb5libs
+    ansible.builtin.find:
+      file_type: any
+      paths:
+        - /usr/lib64
+      patterns:
+        - 'libk5crypto*so*'
+
+  - name: Copy libk5crypto into embeded dir
+    ansible.builtin.copy:
+      dest: /opt/vagrant/embedded/lib64/
+      remote_src: true
+      src: "{{ item['path'] }}"
+    with_items: "{{ findkrb5libs['files'] }}"
+
+
