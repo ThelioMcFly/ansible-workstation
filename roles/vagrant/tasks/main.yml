@@ -23,8 +23,9 @@
     when: not use_hashicorp_repo
   - name: Install Vagrant
     ansible.builtin.package:
-      name: "{{ vargrant_required_packages }}"
+      name: "{{ item.pkg_name }}"
       state: present
+    with_items: "{{ vagrant_required_packages }}"
   
 - name: Ensure libssh and krb5 libs are installed
   block:
@@ -61,6 +62,7 @@
       dest: /opt/vagrant/embedded/lib64/
       remote_src: true
       src: "{{ item['path'] }}"
+      mode: '0755'
     with_items: "{{ findlibssh['files'] }}"
 
   - name: Find - Find libk5crypto .so files
@@ -77,6 +79,7 @@
       dest: /opt/vagrant/embedded/lib64/
       remote_src: true
       src: "{{ item['path'] }}"
+      mode: '0755'
     with_items: "{{ findkrb5libs['files'] }}"
 
 
