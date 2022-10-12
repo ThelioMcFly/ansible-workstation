@@ -16,3 +16,14 @@ ansible-galaxy collectin install community.general
 **```terraform_required_dep_packages```** (list): List of dependencies before terraform can be installed. Default => ```['dnf-plugins-core']```
 
 **```terraform_required_repo```** (string): The URL of the terraform repo to be installed. Default => ```https://rpm.releases.hashicorp.com/fedora/hashicorp.repo```
+
+# Example playbook usage
+```
+- name: Setup required environment
+  hosts: all
+    
+  roles:
+    - role: theliomcfly.workstation.terraform
+      tags: terraform
+      become: true
+```
