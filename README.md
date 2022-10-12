@@ -37,3 +37,4 @@ ansible-galaxy collection install theliomcfly.workstation
 - [Flatpak](docs/FLATPAK.md) - This role will ensure flatpak is installed, configure the flathub repo, and install the specified flatpaks.
 - [gnome_settings](docs/GNOME_SETTINGS.md) - This role will edit the dconf settings in Gnome as specified by the play.
 - [libvirt](docs/LIBVIRT.md) - This role will ensure the required libvirt packages are installed and services running
+- [snap](docs/SNAP.md) - This role will ensure snap is installed and allow users to install specified snaps
