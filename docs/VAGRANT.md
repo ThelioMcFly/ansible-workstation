@@ -21,7 +21,7 @@ This role allows edits dconf settings.
     - role: theliomcfly.workstation.vagrant
       tags: vagrant
       become: true
-      #use_hashicorp_repo: false
+      use_hashicorp_repo: false
       custom_vagrant_repo:
         name: custom_vagrant_repo
         description: custom_vagrant_repo description
