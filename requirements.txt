@@ -1,1 +1,3 @@
 ansible>=2.12.2
+psutil>=5.8.0
+jmespath>=1.0.0
