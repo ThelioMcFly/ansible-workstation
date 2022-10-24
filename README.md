@@ -40,3 +40,4 @@ ansible-galaxy collection install theliomcfly.workstation
 - [snap](docs/SNAP.md) - This role will ensure snap is installed and allow users to install specified snaps
 - [terraform](docs/TERRAFORM.md) - This role will ensure terraform is installed 
 - [vagrant](docs/VAGRANT.md) - This role will ensure vagrant and the vagrant-libvirt provider is installed 
+- [gnome_extensions](docs/GNOME_EXTENSIONS.md) - This role will install the specified extensions for Gnome Shell
