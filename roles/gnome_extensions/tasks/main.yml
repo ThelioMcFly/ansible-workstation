@@ -1,0 +1,22 @@
+---
+
+- name: Set gnome-shell info
+  block:
+  - name: Get gnome-shell version
+    ansible.builtin.command:
+      cmd: "gnome-shell --version |awk '{print $(NF)}'"
+    register: cmd_gnome_shell_version
+    failed_when: cmd_gnome_shell_version.stdout | length == 0
+
+  - name: Set gnome-shell version fact
+    ansible.builtin.set_fact:
+      gnome_shell_version: "{{ cmd_gnome_shell_version.stdout }}"
+    when: cmd_gnome_shell_version.stdout | length > 0
+
+- name: Install gnome-shell extensions
+  loop: gnome_extensions
+  loop_control:
+    loop_var: extension
+    label: "extension_id_{{extension.id}}"
+  when: gnome_extensions is defined
+  include_task: get_extension.yml

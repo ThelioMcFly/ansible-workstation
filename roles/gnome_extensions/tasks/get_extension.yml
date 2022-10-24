@@ -1,0 +1,91 @@
+---
+
+- name: Get metadata info for extensions
+  become: "{{ extension.gnome_user is defined | ternary(true,false) }}"
+  become_user: "{{ extension.gnome_user | default('remote_user') }}"
+  ansible.builtin.uri:
+    url: "https://extensions.gnome.org/extension-info/?pk={{ item }}&shell_version={{ gnome_shell_version }}"
+  register: extension_info
+  failed_when: extension_info.skipped is true
+  loop: "{{ extension.extension_ids }}"
+
+- name: Set fact for extensions found on extensions.gnome.org
+  vars:
+    json_query_filter: "results[?status==`200`].json.{name: name, id: pk, url: download_url, uuid: uuid, version: version, version_tag: version_tag}"
+  ansible.builtin.set_fact: 
+    gnome_extension_info: "{{ extension_info | community.general.json_query(json_query_filter)  }}"
+
+- name: Set fact for extensions not found on extensions.gnome.org
+  vars:
+    filter: "results[?status==`200`].json.pk"
+  ansible.builtin.set_fact:
+    skipped_gnome_extensions: "{{extension.extension_ids | difference(extension_info | community.general.json_query(filter)) }}"
+
+- name: Warn user about extensions not found
+  when: skipped_gnome_extensions | length > 0
+  ansible.builtin.debug:
+    msg: "Some extensions weren't found. Skipping: {{skipped_gnome_extensions | join( ',' ) }}"
+
+- name: Create download directories
+  become: "{{ extension.gnome_user is defined | ternary(true,false) }}"
+  become_user: "{{ extension.gnome_user | default('remote_user') }}"
+  loop: "{{ gnome_extension_info }}"
+  loop_control:
+    label: "{{item.name}}"
+  ansible.builtin.file:
+    path: "{{ lookup('ansible.builtin.env', 'HOME') }}/.gnome-extension-downloads/{{item.name}}/{{item.version}}/{{item.version_tag}}"
+    state: directory
+
+- name: Download the Gnome extensions
+  become: "{{ extension.gnome_user is defined | ternary(true,false) }}"
+  become_user: "{{ extension.gnome_user | default('remote_user') }}"
+  loop: "{{ gnome_extension_info }}"
+  loop_control:
+    label: "{{item.name}}"
+  ansible.builtin.get_url:
+    url: "https://extensions.gnome.org{{item.url}}"
+    dest: "{{ lookup('ansible.builtin.env', 'HOME') }}/.gnome-extension-downloads/{{item.name}}/{{item.version}}/{{item.version_tag}}"
+  register: extension_download
+
+- name: Install the Gnome extensions
+  become: "{{ extension.gnome_user is defined | ternary(true,false) }}"
+  become_user: "{{ extension.gnome_user | default('remote_user') }}"
+  loop: "{{extension_download.results}}"
+  loop_control:
+    label: "{{item.item.name}}"
+  ansible.builtin.command:
+    cmd: "gnome-extensions install {{item.dest}}" 
+  register: extension_install
+  ignore_errors: true
+  failed_when:
+    - extension_install.rc != 0
+    - "'exists and --force' not in extension_install.stderr"
+  changed_when:
+    extension_install.rc == 0
+
+- name: Get dconf settings for enabled extensions
+  become: "{{ extension.gnome_user is defined | ternary(true,false) }}"
+  become_user: "{{ extension.gnome_user | default('remote_user') }}"
+  community.general.dconf:
+    key: "/org/gnome/shell/enabled-extensions"
+    state: read
+  register: dconf_settings
+
+- name: Enable the dconf_settings
+  become: "{{ extension.gnome_user is defined | ternary(true,false) }}"
+  become_user: "{{ extension.gnome_user | default('remote_user') }}"
+  loop: "{{gnome_extension_info}}"
+  loop_control:
+    label: "{{item.uuid}}"
+  community.general.dconf:
+    key: "/org/gnome/shell/enabled-extensions"
+    value: |
+      {{ (dconf_settings.value | replace(']','') ) + 
+      ', "' + 
+      item.uuid + '"]' 
+      }}
+    state: present
+  register: modded_dconf
+  when:
+    - item.uuid not in dconf_settings.value
+
