@@ -1,10 +1,19 @@
 ---
+- name: "Include vars for {{ansible_facts['distribution']}}"
+  include_vars: "{{ansible_facts['distribution']}}.yml"
+
+- name: Ensure psutils is installed
+  become: true
+  ansible.builtin.package:
+    name: "{{psutils_pkg_name}}"
+    state: present
 
 - name: Set gnome-shell info
   block:
   - name: Get gnome-shell version
-    ansible.builtin.command:
-      cmd: "gnome-shell --version |awk '{print $(NF)}'"
+    ansible.builtin.shell:
+      cmd: gnome-shell --version |awk '{print $(NF)}'
+      executable: /bin/bash
     register: cmd_gnome_shell_version
     failed_when: cmd_gnome_shell_version.stdout | length == 0
 
@@ -14,9 +23,9 @@
     when: cmd_gnome_shell_version.stdout | length > 0
 
 - name: Install gnome-shell extensions
-  loop: gnome_extensions
+  loop: "{{ gnome_extensions }}"
   loop_control:
     loop_var: extension
-    label: "extension_id_{{extension.id}}"
+    #label: "extension_id_{{extension.id}}"
   when: gnome_extensions is defined
-  include_task: get_extension.yml
+  include_tasks: get_extension.yml

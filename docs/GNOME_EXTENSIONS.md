@@ -28,7 +28,7 @@ sudo dnf install python3-psutil
 
 ## ```gnome_extensions``` Dictionary Values
 
-**```gnome_user```** (optional) - The user that the extension should be installed for
+**```gnome_user```** (required string) - The user that the extension should be installed for
 
 **```extension_ids```** (required list) - List of extension IDs to install from extensions.gnome.org. The ID can be found from the URL for the extension.
 (E.g.) The ID is 2986 in URL https://extensions.gnome.org/extension/2986/runcat/

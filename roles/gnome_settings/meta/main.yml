@@ -1,3 +1,4 @@
+---
 galaxy_info:
   author: ThelioMcFly
   description: Add/Edit/Remove Gnome settings in dconf
@@ -6,5 +7,5 @@ galaxy_info:
   galaxy_tags: 
     - gnome
     - dconf
-dependencies: 
-  - role: "community.general.dconf"
+#dependencies: 
+#  - community.general

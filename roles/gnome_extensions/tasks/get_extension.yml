@@ -33,7 +33,7 @@
   loop_control:
     label: "{{item.name}}"
   ansible.builtin.file:
-    path: "{{ lookup('ansible.builtin.env', 'HOME') }}/.gnome-extension-downloads/{{item.name}}/{{item.version}}/{{item.version_tag}}"
+    path: "/home/{{ extension.gnome_user | default('remote_user') }}/.gnome-extension-downloads/{{item.name}}/{{item.version}}/{{item.version_tag}}"
     state: directory
 
 - name: Download the Gnome extensions
@@ -44,7 +44,7 @@
     label: "{{item.name}}"
   ansible.builtin.get_url:
     url: "https://extensions.gnome.org{{item.url}}"
-    dest: "{{ lookup('ansible.builtin.env', 'HOME') }}/.gnome-extension-downloads/{{item.name}}/{{item.version}}/{{item.version_tag}}"
+    dest: "/home/{{ extension.gnome_user | default('remote_user') }}/.gnome-extension-downloads/{{item.name}}/{{item.version}}/{{item.version_tag}}"
   register: extension_download
 
 - name: Install the Gnome extensions
@@ -71,21 +71,50 @@
     state: read
   register: dconf_settings
 
-- name: Enable the dconf_settings
+- name: Debug dconf_settings
+  ansible.builtin.debug:
+    var: dconf_settings
+
+- name: Enable extensions in dconf
   become: "{{ extension.gnome_user is defined | ternary(true,false) }}"
   become_user: "{{ extension.gnome_user | default('remote_user') }}"
-  loop: "{{gnome_extension_info}}"
-  loop_control:
-    label: "{{item.uuid}}"
-  community.general.dconf:
-    key: "/org/gnome/shell/enabled-extensions"
-    value: |
-      {{ (dconf_settings.value | replace(']','') ) + 
-      ', "' + 
-      item.uuid + '"]' 
-      }}
-    state: present
-  register: modded_dconf
-  when:
-    - item.uuid not in dconf_settings.value
+  block:
+    - name: Initializing the dconf key
+      community.general.dconf:
+        key: "/org/gnome/shell/enabled-extensions"
+        value: "'{{ gnome_extension_info | community.general.json_query('[*].uuid') | to_json }}'"
+        state: present
+      register: initialized_dconf
+      when: dconf_settings.value == None
 
+    - name: Appending to the dconf key
+      become: "{{ extension.gnome_user is defined | ternary(true,false) }}"
+      become_user: "{{ extension.gnome_user | default('remote_user') }}"
+      loop: "{{gnome_extension_info}}"
+      loop_control:
+        label: "{{item.uuid}}"
+      community.general.dconf:
+        key: "/org/gnome/shell/enabled-extensions"
+        value: |
+          {{ (dconf_settings.value | replace(']','') ) + 
+          ', "' + 
+          item.uuid + '"]' | replace('[,', '[')
+          }}
+        state: present
+      register: modded_dconf
+      when:
+        - dconf_settings.value != None
+        - item.uuid not in dconf_settings.value
+        
+- name: debug initialized_dconf
+  become: "{{ extension.gnome_user is defined | ternary(true,false) }}"
+  become_user: "{{ extension.gnome_user | default('remote_user') }}"
+  ansible.builtin.debug:
+    var: initialized_dconf
+
+
+- name: debug modded_dconf
+  become: "{{ extension.gnome_user is defined | ternary(true,false) }}"
+  become_user: "{{ extension.gnome_user | default('remote_user') }}"
+  ansible.builtin.debug:
+    var: modded_dconf
