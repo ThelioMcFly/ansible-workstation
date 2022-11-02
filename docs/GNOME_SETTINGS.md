@@ -26,7 +26,7 @@ sudo dnf install python3-psutil
 
 **```config```** (list of dictionaries): This is a list of dictionaries. Each key below is described below
 
-**```dconf_user```** (string): The user that will get the setting specified. Default => ```remote_user``` (the user used to connect to the host)
+**```dconf_user```** (string): The user that will get the setting specified. Default => ```ansible_user``` (the user used to connect to the host)
 
 **```key```** (string): The dconf key that is being set. This has to be in the GVariant format and **must** start with a slash (e.g. "org/gnome/desktop/interface/color-scheme" )
 

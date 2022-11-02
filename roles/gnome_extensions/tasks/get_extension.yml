@@ -2,7 +2,7 @@
 
 - name: Get metadata info for extensions
   become: "{{ extension.gnome_user is defined | ternary(true,false) }}"
-  become_user: "{{ extension.gnome_user | default('remote_user') }}"
+  become_user: "{{ extension.gnome_user | default('ansible_user') }}"
   ansible.builtin.uri:
     url: "https://extensions.gnome.org/extension-info/?pk={{ item }}&shell_version={{ gnome_shell_version }}"
   register: extension_info
@@ -28,28 +28,28 @@
 
 - name: Create download directories
   become: "{{ extension.gnome_user is defined | ternary(true,false) }}"
-  become_user: "{{ extension.gnome_user | default('remote_user') }}"
+  become_user: "{{ extension.gnome_user | default('ansible_user') }}"
   loop: "{{ gnome_extension_info }}"
   loop_control:
     label: "{{item.name}}"
   ansible.builtin.file:
-    path: "/home/{{ extension.gnome_user | default('remote_user') }}/.gnome-extension-downloads/{{item.name}}/{{item.version}}/{{item.version_tag}}"
+    path: "/home/{{ extension.gnome_user | default('ansible_user') }}/.gnome-extension-downloads/{{item.name}}/{{item.version}}/{{item.version_tag}}"
     state: directory
 
 - name: Download the Gnome extensions
   become: "{{ extension.gnome_user is defined | ternary(true,false) }}"
-  become_user: "{{ extension.gnome_user | default('remote_user') }}"
+  become_user: "{{ extension.gnome_user | default('ansible_user') }}"
   loop: "{{ gnome_extension_info }}"
   loop_control:
     label: "{{item.name}}"
   ansible.builtin.get_url:
     url: "https://extensions.gnome.org{{item.url}}"
-    dest: "/home/{{ extension.gnome_user | default('remote_user') }}/.gnome-extension-downloads/{{item.name}}/{{item.version}}/{{item.version_tag}}"
+    dest: "/home/{{ extension.gnome_user | default('ansible_user') }}/.gnome-extension-downloads/{{item.name}}/{{item.version}}/{{item.version_tag}}"
   register: extension_download
 
 - name: Install the Gnome extensions
   become: "{{ extension.gnome_user is defined | ternary(true,false) }}"
-  become_user: "{{ extension.gnome_user | default('remote_user') }}"
+  become_user: "{{ extension.gnome_user | default('ansible_user') }}"
   loop: "{{extension_download.results}}"
   loop_control:
     label: "{{item.item.name}}"
@@ -65,7 +65,7 @@
 
 - name: Get dconf settings for enabled extensions
   become: "{{ extension.gnome_user is defined | ternary(true,false) }}"
-  become_user: "{{ extension.gnome_user | default('remote_user') }}"
+  become_user: "{{ extension.gnome_user | default('ansible_user') }}"
   community.general.dconf:
     key: "/org/gnome/shell/enabled-extensions"
     state: read
@@ -77,7 +77,7 @@
 
 - name: Enable extensions in dconf
   become: "{{ extension.gnome_user is defined | ternary(true,false) }}"
-  become_user: "{{ extension.gnome_user | default('remote_user') }}"
+  become_user: "{{ extension.gnome_user | default('ansible_user') }}"
   block:
     - name: Initializing the dconf key
       community.general.dconf:
@@ -89,7 +89,7 @@
 
     - name: Appending to the dconf key
       become: "{{ extension.gnome_user is defined | ternary(true,false) }}"
-      become_user: "{{ extension.gnome_user | default('remote_user') }}"
+      become_user: "{{ extension.gnome_user | default('ansible_user') }}"
       loop: "{{gnome_extension_info}}"
       loop_control:
         label: "{{item.uuid}}"
@@ -108,13 +108,13 @@
         
 - name: debug initialized_dconf
   become: "{{ extension.gnome_user is defined | ternary(true,false) }}"
-  become_user: "{{ extension.gnome_user | default('remote_user') }}"
+  become_user: "{{ extension.gnome_user | default('ansible_user') }}"
   ansible.builtin.debug:
     var: initialized_dconf
 
 
 - name: debug modded_dconf
   become: "{{ extension.gnome_user is defined | ternary(true,false) }}"
-  become_user: "{{ extension.gnome_user | default('remote_user') }}"
+  become_user: "{{ extension.gnome_user | default('ansible_user') }}"
   ansible.builtin.debug:
     var: modded_dconf

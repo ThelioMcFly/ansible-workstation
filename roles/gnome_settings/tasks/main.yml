@@ -10,7 +10,7 @@
 
 - name: Set specified configurations
   become: "{{item.dconf_user is defined | ternary(true,false)}}"
-  become_user: "{{item.dconf_user is defined | ternary(item.dconf_user, 'remote_user') }}"
+  become_user: "{{item.dconf_user is defined | ternary(item.dconf_user, 'ansible_user') }}"
   community.general.dconf:
     key: "{{item.dconf_settings.key}}"
     value: "'{{item.dconf_settings.value }}'"
