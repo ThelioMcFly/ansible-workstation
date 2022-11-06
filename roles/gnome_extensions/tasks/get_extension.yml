@@ -71,10 +71,6 @@
     state: read
   register: dconf_settings
 
-- name: Debug dconf_settings
-  ansible.builtin.debug:
-    var: dconf_settings
-
 - name: Enable extensions in dconf
   become: "{{ extension.gnome_user is defined | ternary(true,false) }}"
   become_user: "{{ extension.gnome_user | default('ansible_user') }}"
@@ -105,16 +101,4 @@
       when:
         - dconf_settings.value != None
         - item.uuid not in dconf_settings.value
-        
-- name: debug initialized_dconf
-  become: "{{ extension.gnome_user is defined | ternary(true,false) }}"
-  become_user: "{{ extension.gnome_user | default('ansible_user') }}"
-  ansible.builtin.debug:
-    var: initialized_dconf
 
-
-- name: debug modded_dconf
-  become: "{{ extension.gnome_user is defined | ternary(true,false) }}"
-  become_user: "{{ extension.gnome_user | default('ansible_user') }}"
-  ansible.builtin.debug:
-    var: modded_dconf
