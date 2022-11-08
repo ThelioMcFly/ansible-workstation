@@ -6,9 +6,11 @@ authors:
 - ThelioMcFly
 description: This collection will allow a new workstation install to be configured quickly
 
-tags: 
+galaxy_tags: 
   - ThelioMcFly
   - Workstation
+
+license: License.md
 
 dependencies: 
   "community.general": ">=4.4.0"
