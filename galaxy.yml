@@ -10,7 +10,7 @@ galaxy_tags:
   - ThelioMcFly
   - Workstation
 
-license: License.md
+license_file: License.md
 
 dependencies: 
   "community.general": ">=4.4.0"
