@@ -1,38 +1,34 @@
-Role Name
-=========
+# Role: theliomcfly.workstation.gnome_extensions
 
-A brief description of the role goes here.
+# Description
 
-Requirements
-------------
+This role allows edits dconf settings.
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+# Requirements
 
-Role Variables
---------------
+Outside of the ansible.builtin collecitons this collection requires the ```community.general``` collection to be installed.
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+### Install the collection ```community.general``` if not already
+```
+ansible-galaxy collectin install community.general
+```
 
-Dependencies
-------------
+### Install psutils if not already (Optional)
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+This step is optional since the ```theliomcfly.workstation.gnome_settings``` role ensures that it's installed.`
 
-Example Playbook
-----------------
+#### Fedora
+```
+sudo dnf install python3-psutil
+```
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+# Role variables 
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+**```gnome_extensions```** (list of dictionaries): This is a list of dictionaries. Each key below is described below
 
-License
--------
+## ```gnome_extensions``` Dictionary Values
 
-BSD
+**```gnome_user```** (required string) - The user that the extension should be installed for
 
-Author Information
-------------------
-
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+**```extension_ids```** (required list) - List of extension IDs to install from extensions.gnome.org. The ID can be found from the URL for the extension.
+(E.g.) The ID is 2986 in URL https://extensions.gnome.org/extension/2986/runcat/
