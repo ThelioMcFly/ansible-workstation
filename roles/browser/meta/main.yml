@@ -10,6 +10,5 @@ galaxy_info:
         - "36"
   galaxy_tags:
     - browser
-    - ThelioMcFly
     - workstation
 dependencies: []

@@ -9,7 +9,6 @@ galaxy_info:
       versions:
         - "36"
   galaxy_tags:
-    - browser
-    - ThelioMcFly
+    - terraform
     - workstation
 dependencies: []

@@ -9,7 +9,7 @@ galaxy_info:
       versions:
         - "36"
   galaxy_tags:
-    - browser
-    - ThelioMcFly
+    - vagrant
+    - Vagrant
     - workstation
 dependencies: []

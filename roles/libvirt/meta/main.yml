@@ -9,7 +9,7 @@ galaxy_info:
       versions:
         - "36"
   galaxy_tags:
-    - browser
-    - ThelioMcFly
+    - libvirt
+    - kvm
     - workstation
 dependencies: []
