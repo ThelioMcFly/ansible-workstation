@@ -6,11 +6,12 @@ authors:
 - ThelioMcFly
 description: This collection will allow a new workstation install to be configured quickly
 
-galaxy_tags: 
+tags: 
   - ThelioMcFly
   - Workstation
 
-license_file: License.md
+license:
+  - Apache-2.0
 
 dependencies: 
   "community.general": ">=4.4.0"

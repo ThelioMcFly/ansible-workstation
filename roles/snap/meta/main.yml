@@ -1,5 +1,5 @@
 galaxy_info:
-  role_name: gnome_settings
+  role_name: snap
   author: ThelioMcFly
   description: This will install browsers on a system
   license: "Apache-2.0"
