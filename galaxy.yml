@@ -7,7 +7,15 @@ authors:
 description: This collection will allow a new workstation install to be configured quickly
 
 tags: 
-  - ThelioMcFly
+  - gnome
+  - gsettings
+  - vagrant
+  - flatpak
+  - terraform
+  - libvirt
+  - kvm
+  - gnomeextensions
+  - browser
   - Workstation
 
 license:
